@@ -1,0 +1,17 @@
+services:
+  # Frontend Next.js Application Service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "3001:3000"
+    environment:
+      # Core Application
+      - NODE_ENV=${NODE_ENV}
+      # Backend Communication (External Backend Service)
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - BACKEND_URL=${BACKEND_URL}
+
+    restart: unless-stopped

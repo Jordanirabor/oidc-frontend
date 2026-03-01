@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Custom color palette - your original colors */
+  --color-bg-10: #041323;
+  --color-bg-20: #0A192A;
+  --color-element-10: #1C2B3D;
+  --color-element-20: #263446;
+  --color-element-30: #2B394C;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #798BB2;
+  --color-text-secondary-50: #D9E1FFCC;
+  --color-text-muted: #D9E1FF99;
+  --color-text-tertiary: #A9A9A9;
+  --color-button-secondary: #D9E1FF;
+  --color-primary-emphasis: #51ABFF;
+  --color-primary-foreground: #97CDFF;
+  --color-primary-20: #2493FB20;
+
+  /* Status colors */
+  --color-green-0: #11A55B;
+  --color-green-10: #019249;
+  --color-green-20: #41FF64;
+  --color-green-30: #00A55B;
+  --color-grey-0: #63697E;
+  --color-red-0: #F96D6D;
+  --color-red-10: #E74949;
+  --color-yellow-0: #E2A724;
+  --color-yellow-10: #BC8100;
+
+  /* shadcn/ui theme variables - using your custom colors */
+  --color-background: #041323;
+  --color-foreground: #FFFFFF;
+  --color-card: #1C2B3D;
+  --color-card-foreground: #FFFFFF;
+  --color-popover: #1C2B3D;
+  --color-popover-foreground: #FFFFFF;
+  --color-primary: #2493FB;
+  --color-primary-foreground: #97CDFF;
+  --color-secondary: #08243F;
+  --color-secondary-foreground: #12375B;
+  --color-muted: #263446;
+  --color-muted-foreground: #798BB2;
+  --color-accent: #263446;
+  --color-accent-foreground: #FFFFFF;
+  --color-destructive: #F96D6D;
+  --color-destructive-foreground: #FFFFFF;
+  --color-border: #2B394C;
+  --color-input: #2B394C;
+  --color-ring: var(--ring);  
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  /* Border radius */
+  --radius: 0.625rem;
+
+  /* shadcn/ui theme variables - using your custom colors */
+  --background: #041323;
+  --foreground: #FFFFFF;
+  --card: #1C2B3D;
+  --card-foreground: #FFFFFF;
+  --popover: #1C2B3D;
+  --popover-foreground: #FFFFFF;
+  --primary: #2493FB;
+  --primary-20: #2493FB20;
+  --primary-foreground: #97CDFF;
+  --secondary: #08243F;
+  --secondary-foreground: #12375B;
+  --muted: #263446;
+  --muted-foreground: #798BB2;
+  --accent: #263446;
+  --accent-foreground: #FFFFFF;
+  --destructive: #F96D6D;
+  --destructive-foreground: #FFFFFF;
+  --border: #2B394C;
+  --input: #2B394C;
+  --ring: #2493FB;
+  --chart-1: #2493FB;
+  --chart-2: #51ABFF;
+  --chart-3: #97CDFF;
+  --chart-4: #798BB2;
+  --chart-5: #A9A9A9;
+}
+
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Completely disable Radix UI scroll lock behavior */
+body[data-scroll-locked] {
+  overflow: auto !important;
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
+html[data-scroll-locked],
+html body[data-scroll-locked] {
+  overflow: auto !important;
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Dark theme - using your custom colors */
+.dark {
+  --background: #041323;
+  --foreground: #FFFFFF;
+  --card: #1C2B3D;
+  --card-foreground: #FFFFFF;
+  --popover: #1C2B3D;
+  --popover-foreground: #FFFFFF;
+  --primary: #2493FB;
+  --primary-foreground: #97CDFF;
+  --secondary: #08243F;
+  --secondary-foreground: #12375B;
+  --muted: #263446;
+  --muted-foreground: #798BB2;
+  --accent: #263446;
+  --accent-foreground: #FFFFFF;
+  --destructive: #F96D6D;
+  --destructive-foreground: #FFFFFF;
+  --border: #2B394C;
+  --input: #2B394C;
+  --ring: #2493FB;
+}
