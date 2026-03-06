@@ -23,6 +23,9 @@ function AuthPageContent() {
   const codeChallengeMethod = searchParams.get("code_challenge_method");
   const prompt = searchParams.get("prompt");
 
+  // Determine if this is a third-party OAuth flow (has OIDC params in URL)
+  const isThirdPartyFlow = !!(clientId && redirectUri && scope);
+
   // Check for existing sessions and redirect to accounts if found
   useEffect(() => {
     const checkExistingSessions = async () => {
@@ -53,7 +56,7 @@ function AuthPageContent() {
             if (codeChallengeMethod)
               accountsUrl.searchParams.set(
                 "code_challenge_method",
-                codeChallengeMethod
+                codeChallengeMethod,
               );
 
             window.location.href = accountsUrl.toString();
@@ -130,6 +133,7 @@ function AuthPageContent() {
         nonce={nonce}
         codeChallenge={codeChallenge}
         codeChallengeMethod={codeChallengeMethod}
+        isThirdPartyFlow={isThirdPartyFlow}
       />
     </div>
   );

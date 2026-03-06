@@ -17,6 +17,7 @@ interface LoginFormProps {
   nonce?: string | null;
   codeChallenge?: string | null;
   codeChallengeMethod?: string | null;
+  isThirdPartyFlow?: boolean;
 }
 
 const LoginForm = ({
@@ -27,6 +28,7 @@ const LoginForm = ({
   nonce,
   codeChallenge,
   codeChallengeMethod,
+  isThirdPartyFlow = false,
 }: LoginFormProps) => {
   const [email, setEmail] = useState("");
   const [referralCode, setReferralCode] = useState("");
@@ -43,7 +45,7 @@ const LoginForm = ({
     // Validate required OIDC parameters
     if (!clientId || !redirectUri || !scope) {
       setError(
-        "Missing required authentication parameters. Please try accessing this page through the proper authorization flow."
+        "Missing required authentication parameters. Please try accessing this page through the proper authorization flow.",
       );
       setIsEmailLoading(false);
       return;
@@ -70,7 +72,7 @@ const LoginForm = ({
       !isValidReferralCode(referralCode)
     ) {
       setError(
-        "Invalid referral code format. Expected format: REF-XXXXX or bypass code"
+        "Invalid referral code format. Expected format: REF-XXXXX or bypass code",
       );
       setIsEmailLoading(false);
       return;
@@ -112,7 +114,7 @@ const LoginForm = ({
         if (response.status === 403 && data.error === "referral_required") {
           setShowReferralInput(true);
           setError(
-            data.error_description || "A referral code is required to join."
+            data.error_description || "A referral code is required to join.",
           );
         } else if (
           response.status === 403 &&
@@ -120,12 +122,12 @@ const LoginForm = ({
         ) {
           setShowReferralInput(true);
           setError(
-            data.error_description || "The provided referral code is invalid."
+            data.error_description || "The provided referral code is invalid.",
           );
         } else if (response.status === 400) {
           setError(
             data.error_description ||
-              "Invalid request. Please check your parameters and try again."
+              "Invalid request. Please check your parameters and try again.",
           );
         } else if (response.status === 404) {
           setError("Authentication service not found. Please try again later.");
@@ -134,7 +136,7 @@ const LoginForm = ({
         } else {
           setError(
             data.error_description ||
-              "Failed to send magic link. Please try again."
+              "Failed to send magic link. Please try again.",
           );
         }
       }
@@ -303,19 +305,21 @@ const LoginForm = ({
               </p>
             </div>
 
-            {/* Debug info for missing OIDC parameters */}
-            {(!clientId || !redirectUri || !scope) && (
-              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-md p-3 mb-4">
-                <p className="text-yellow-400 text-sm">
-                  <strong>Debug Info:</strong> Missing OIDC parameters
-                </p>
-                <div className="text-xs text-yellow-300 mt-1">
-                  <p>Client ID: {clientId || "null"}</p>
-                  <p>Redirect URI: {redirectUri || "null"}</p>
-                  <p>Scope: {scope || "null"}</p>
+            {/* Debug info for missing OIDC parameters - only in development and third-party flows */}
+            {process.env.NODE_ENV === "development" &&
+              isThirdPartyFlow &&
+              (!clientId || !redirectUri || !scope) && (
+                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-md p-3 mb-4">
+                  <p className="text-yellow-400 text-sm">
+                    <strong>Debug Info:</strong> Missing OIDC parameters
+                  </p>
+                  <div className="text-xs text-yellow-300 mt-1">
+                    <p>Client ID: {clientId || "null"}</p>
+                    <p>Redirect URI: {redirectUri || "null"}</p>
+                    <p>Scope: {scope || "null"}</p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             <form onSubmit={handleEmailSignIn} className="space-y-4">
               <div className="space-y-2">

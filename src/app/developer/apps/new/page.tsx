@@ -75,7 +75,7 @@ export default function NewApplicationPage() {
   } | null>(null);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -97,18 +97,20 @@ export default function NewApplicationPage() {
 
   const addRedirectUri = () => {
     const lastUri = formData.redirectUris[formData.redirectUris.length - 1];
-    
+
     // Check if last URI is empty or invalid
     if (!lastUri.trim()) {
-      setError("Please fill in the current redirect URI before adding a new one");
+      setError(
+        "Please fill in the current redirect URI before adding a new one",
+      );
       return;
     }
-    
+
     if (!validateURL(lastUri)) {
       setError("Please enter a valid URL (e.g., https://example.com/callback)");
       return;
     }
-    
+
     // Clear any previous errors and add new empty URI
     setError(null);
     setFormData((prev) => ({
@@ -120,7 +122,7 @@ export default function NewApplicationPage() {
   const removeRedirectUri = (index: number) => {
     if (formData.redirectUris.length > 1) {
       const newRedirectUris = formData.redirectUris.filter(
-        (_, i) => i !== index
+        (_, i) => i !== index,
       );
       setFormData((prev) => ({
         ...prev,
@@ -152,11 +154,36 @@ export default function NewApplicationPage() {
     setError(null);
 
     try {
-      // Filter out empty redirect URIs
-      const cleanedData = {
-        ...formData,
+      // Filter out empty redirect URIs and optional URL fields
+      const cleanedData: {
+        name: string;
+        redirectUris: string[];
+        scopes: string[];
+        requirePkce: boolean;
+        description?: string;
+        websiteUrl?: string;
+        privacyPolicyUrl?: string;
+        termsOfServiceUrl?: string;
+      } = {
+        name: formData.name,
         redirectUris: formData.redirectUris.filter((uri) => uri.trim() !== ""),
+        scopes: formData.scopes,
+        requirePkce: formData.requirePkce,
       };
+
+      // Only include optional fields if they have values
+      if (formData.description.trim()) {
+        cleanedData.description = formData.description;
+      }
+      if (formData.websiteUrl.trim()) {
+        cleanedData.websiteUrl = formData.websiteUrl;
+      }
+      if (formData.privacyPolicyUrl.trim()) {
+        cleanedData.privacyPolicyUrl = formData.privacyPolicyUrl;
+      }
+      if (formData.termsOfServiceUrl.trim()) {
+        cleanedData.termsOfServiceUrl = formData.termsOfServiceUrl;
+      }
 
       // Validate all redirect URIs
       if (cleanedData.redirectUris.length === 0) {
@@ -218,8 +245,9 @@ export default function NewApplicationPage() {
                 </h3>
                 <div className="mt-2 text-sm text-green-300/80">
                   <p>
-                    Your application &quot;{success.client.name}&quot; has been
-                    created and is pending approval.
+                    {success.client.status === "active"
+                      ? `Your application "${success.client.name}" has been created and is immediately usable.`
+                      : `Your application "${success.client.name}" has been created and is pending approval.`}
                   </p>
                 </div>
               </div>
@@ -291,9 +319,15 @@ export default function NewApplicationPage() {
                 <div className="bg-bg-20 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt className="text-sm font-medium text-slate-400">Status</dt>
                   <dd className="mt-1 text-sm text-slate-100 sm:mt-0 sm:col-span-2">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-none bg-yellow-950/30 border border-yellow-500/30 text-yellow-400">
-                      Pending Approval
-                    </span>
+                    {success.client.status === "active" ? (
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-none bg-green-950/30 border border-green-500/30 text-green-400">
+                        Active
+                      </span>
+                    ) : (
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-none bg-yellow-950/30 border border-yellow-500/30 text-yellow-400">
+                        Pending Approval
+                      </span>
+                    )}
                   </dd>
                 </div>
               </dl>
@@ -536,7 +570,9 @@ export default function NewApplicationPage() {
                                 </span>
                               )}
                             </label>
-                            <p className="text-slate-400">{scope.description}</p>
+                            <p className="text-slate-400">
+                              {scope.description}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -574,7 +610,10 @@ export default function NewApplicationPage() {
                           <ul className="list-disc list-inside space-y-1">
                             <li>Single-page applications (SPAs)</li>
                             <li>Mobile applications</li>
-                            <li>Any public client that cannot securely store secrets</li>
+                            <li>
+                              Any public client that cannot securely store
+                              secrets
+                            </li>
                           </ul>
                         </div>
                       </div>
